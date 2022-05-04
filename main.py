@@ -141,12 +141,11 @@ def choose_by_animal_id(itemid):
     LEFT JOIN all_colors ON all_colors.id = animals_new.colors_id
     LEFT JOIN breeds ON breeds.id = animals_new.breed_id
     LEFT JOIN outcome ON outcome.id = animals_new.outcome_id
-    WHERE animal_id = 'A678580'      
+    WHERE animals_new.animal_id = '{itemid}'    
     """
-    # WHERE animals.animal_id == {itemid}
+    # WHERE animal_id = 'A678580'
 
     print(db_connection(qwery))
-
     response = db_connection(qwery)[0]
     response_json = {
         "age_upon_outcome": response[0],
