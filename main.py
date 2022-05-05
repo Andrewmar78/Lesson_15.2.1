@@ -5,19 +5,7 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 
-def db_connection(qwery):
-    """Соединение с базой данных"""
-    try:
-        with sqlite3.connect(path) as connection:
-            cursor = connection.cursor()
-            cursor.execute(qwery)
-            result = cursor.fetchall()
-            return result
-    except sqlite3.Error as error:
-        print("Ошибка при работе с SQLite:", error)
-
-
-def db_connection1(qwery, params):
+def db_connection(qwery, params=""):
     """Соединение с базой данных"""
     try:
         with sqlite3.connect(path) as connection:
@@ -156,8 +144,8 @@ def choose_by_animal_id(itemid):
     WHERE animals_new.animal_id = :itemid    
     """
 
-    print(db_connection1(qwery, {'itemid': itemid}))
-    response = db_connection1(qwery, {'itemid': itemid})[0]
+    print(db_connection(qwery, {'itemid': itemid}))
+    response = db_connection(qwery, {'itemid': itemid})[0]
     response_json = {
         "age_upon_outcome": response[0],
         "animal_id": response[1],
@@ -176,7 +164,7 @@ def choose_by_animal_id(itemid):
 
 
 # Проверки
-# create_breeds_table()
+create_breeds_table()
 # create_colors_table()
 # create_outcome_table()
 # create_main_table()
