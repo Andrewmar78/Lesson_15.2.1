@@ -5,12 +5,12 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 
-def db_connection(qwery):
+def db_connection(qwery, params):
     """Соединение с базой данных"""
     try:
         with sqlite3.connect(path) as connection:
             cursor = connection.cursor()
-            cursor.execute(qwery)
+            cursor.execute(qwery, params)
             result = cursor.fetchall()
             return result
     except sqlite3.Error as error:
@@ -141,12 +141,11 @@ def choose_by_animal_id(itemid):
     LEFT JOIN all_colors ON all_colors.id = animals_new.colors_id
     LEFT JOIN breeds ON breeds.id = animals_new.breed_id
     LEFT JOIN outcome ON outcome.id = animals_new.outcome_id
-    WHERE animals_new.animal_id = '{itemid}'    
+    WHERE animals_new.animal_id = :itemid    
     """
-    # WHERE animal_id = 'A678580'
 
-    print(db_connection(qwery))
-    response = db_connection(qwery)[0]
+    print(db_connection(qwery, {'itemid': itemid}))
+    response = db_connection(qwery, {'itemid': itemid})[0]
     response_json = {
         "age_upon_outcome": response[0],
         "animal_id": response[1],
@@ -156,7 +155,10 @@ def choose_by_animal_id(itemid):
         "breed": response[5],
         "color1": response[6],
         "color2": response[7],
-        "остальное": "и еще все, что связано с программами животных",
+        "outcome_subtype": response[8],
+        "outcome_type": response[9],
+        "outcome_month": response[10],
+        "outcome_year": response[11],
     }
     return response_json
 
