@@ -1,6 +1,6 @@
 import sqlite3
 from configure import path
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -145,6 +145,7 @@ def choose_by_animal_id(itemid):
     """
 
     print(db_connection(qwery, {'itemid': itemid}))
+
     response = db_connection(qwery, {'itemid': itemid})[0]
     response_json = {
         "age_upon_outcome": response[0],
@@ -163,13 +164,6 @@ def choose_by_animal_id(itemid):
     return response_json
 
 
-# Проверки
-create_breeds_table()
-# create_colors_table()
-# create_outcome_table()
-# create_main_table()
-choose_by_animal_id('A678580')
-
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 app.config['DEBUG'] = True
@@ -178,9 +172,19 @@ app.config['DEBUG'] = True
 @app.route("/<itemid>")
 def search_by_animal_item(itemid):
     """Вьюшка страницы поиска по id"""
-    response_json = choose_by_animal_id(itemid)
-    return jsonify(response_json)
+    try:
+        response_json = choose_by_animal_id(itemid)
+        return jsonify(response_json)
+    except IndexError:
+        return "Ошибка IndexError"
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# Проверки
+# create_breeds_table()
+# create_colors_table()
+# create_outcome_table()
+# create_main_table()
+# choose_by_animal_id('A678581')
